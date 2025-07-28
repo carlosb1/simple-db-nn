@@ -14,7 +14,7 @@ type BEU32 = U32<BigEndian>;
 const DEFAULT_DIMS: usize = 384;
 
 pub trait Embeddable {
-    fn to_embedding(&self, content: Vec<u8>) -> Vec<f32> {
+    fn to_embedding(&self, _: Vec<u8>) -> Vec<f32> {
         let values: [f32; DEFAULT_DIMS] = [0.; DEFAULT_DIMS];
         values.to_vec()
     }
@@ -396,7 +396,7 @@ pub mod tests {
         let db_path = PathBuf::from("test_db");
         let embedded_path = PathBuf::from("test_embedded_db");
         let config_path = PathBuf::from("config");
-        remove(&db_path, &embedded_path, &config_path);
+        let _ = remove(&db_path.clone(), &embedded_path.clone(), &config_path.clone());
 
         let mut dummy_db: SimpleDBNN<DummyEmbedding, Euclidean> = SimpleDBNN::new(
             db_path,
@@ -419,11 +419,13 @@ pub mod tests {
             .unwrap();
 
         let results = dummy_db.get_nn("hello", 0, 4).unwrap();
+
         println!("{:?}", results);
 
         assert_eq!(4, results.len());
         let worse_result = results.last().unwrap();
         assert!(worse_result.1 > 1000.0);
+        
     }
 
     #[test]
@@ -453,7 +455,7 @@ pub mod tests {
             .unwrap();
 
         let results = dummy_db.get_nn("hello", 0, 4).unwrap();
-        
+
         println!("{:?}", results);
         assert_eq!(4, results.len());
         let worse_result = results.last().unwrap();
