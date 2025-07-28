@@ -425,7 +425,7 @@ pub mod tests {
         assert_eq!(4, results.len());
         let worse_result = results.last().unwrap();
         assert!(worse_result.1 > 1000.0);
-        
+
     }
 
     #[test]
