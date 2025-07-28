@@ -2,7 +2,7 @@
 name = "simple_db_nn"
 version = "0.1.0"
 edition = "2024"
-authors = ["Carlos B. <carlos.baezruiz@gmail.com>"]
+authors = ["Carlos B. <mcflurry0@gmail.com>"]
 license = "MIT OR Apache-2.0" # Usa una licencia válida
 description = "Very stupid and simple db with nearest neighbors algorithms to use with embeddings"
 readme = "README.md"
