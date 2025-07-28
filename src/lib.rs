@@ -250,10 +250,10 @@ impl<T: Embeddable, D: Distance> SimpleDBNN<T, D> {
     }
 
     pub fn clear(&mut self) -> anyhow::Result<()> {
-        let _ = fs::remove_dir_all(&self.path_db);
-        let _ = fs::remove_dir_all(&self.path_embedded);
-        let _ = fs::remove_dir_all(&self.path_config);
-        let _ = fs::remove_file(&self.path_config);
+        let _ = fs::remove_dir_all(&self.path_db.clone());
+        let _ = fs::remove_dir_all(&self.path_embedded.clone());
+        let _ = fs::remove_dir_all(&self.path_config.clone());
+        let _ = fs::remove_file(&self.path_config.clone());
         Ok(())
     }
 }
@@ -262,10 +262,10 @@ pub fn remove(
     path_embedded: &PathBuf,
     path_config: &PathBuf,
 ) -> anyhow::Result<()> {
-    let _ = fs::remove_dir_all(path_buf);
-    let _ = fs::remove_dir_all(path_embedded);
-    let _ = fs::remove_dir_all(path_config);
-    let _ = fs::remove_file(path_config);
+    let _ = fs::remove_dir_all(path_buf.clone());
+    let _ = fs::remove_dir_all(path_embedded.clone());
+    let _ = fs::remove_dir_all(path_config.clone());
+    let _ = fs::remove_file(path_config.clone());
     Ok(())
 }
 
@@ -310,9 +310,9 @@ pub mod tests {
         let _ = remove(&db_path, &embedded_path, &config_path);
 
         let mut dummy_db: SimpleDBNN<DummyEmbedding, Euclidean> = SimpleDBNN::new(
-            db_path,
-            embedded_path,
-            config_path,
+            db_path.clone(),
+            embedded_path.clone(),
+            config_path.clone(),
             DummyEmbedding,
             DEFAULT_DIMS,
             0,
@@ -327,6 +327,7 @@ pub mod tests {
         let restored_content = String::from_utf8(elems.to_vec()).unwrap();
         println!("{:?}", restored_content);
         assert_eq!(content, restored_content);
+        let _ = remove(&db_path, &embedded_path, &config_path);
     }
 
     #[test]
@@ -336,9 +337,9 @@ pub mod tests {
         let config_path = PathBuf::from("config2");
         let _ = remove(&db_path, &embedded_path, &config_path);
         let mut dummy_db: SimpleDBNN<DummyEmbedding, Euclidean> = SimpleDBNN::new(
-            db_path,
-            embedded_path,
-            config_path,
+            db_path.clone(),
+            embedded_path.clone(),
+            config_path.clone(),
             DummyEmbedding,
             DEFAULT_DIMS,
             0,
@@ -349,6 +350,7 @@ pub mod tests {
         dummy_db.put_db(content, 0).unwrap();
         let non_found = dummy_db.get_db(1).unwrap();
         assert!(non_found.is_none());
+        let _ = remove(&db_path, &embedded_path, &config_path);
     }
 
     #[test]
@@ -359,9 +361,9 @@ pub mod tests {
         let _ = remove(&db_path, &embedded_path, &config_path);
 
         let mut dummy_db: SimpleDBNN<DummyEmbedding, Euclidean> = SimpleDBNN::new(
-            db_path,
-            embedded_path,
-            config_path,
+            db_path.clone(),
+            embedded_path.clone(),
+            config_path.clone(),
             DummyEmbedding,
             DEFAULT_DIMS,
             0,
@@ -389,6 +391,7 @@ pub mod tests {
         let worse_result = results.last().unwrap();
         assert_eq!(worse_result.0, 3);
         assert!(worse_result.1 > 1000.0);
+        let _ = remove(&db_path, &embedded_path, &config_path);
     }
 
     #[test]
@@ -399,9 +402,9 @@ pub mod tests {
         let _ = remove(&db_path.clone(), &embedded_path.clone(), &config_path.clone());
 
         let mut dummy_db: SimpleDBNN<DummyEmbedding, Euclidean> = SimpleDBNN::new(
-            db_path,
-            embedded_path,
-            config_path,
+            db_path.clone(),
+            embedded_path.clone(),
+            config_path.clone(),
             DummyEmbedding,
             DEFAULT_DIMS,
             0,
@@ -425,7 +428,7 @@ pub mod tests {
         assert_eq!(4, results.len());
         let worse_result = results.last().unwrap();
         assert!(worse_result.1 > 1000.0);
-
+        let _ = remove(&db_path, &embedded_path, &config_path);
     }
 
     #[test]
@@ -436,9 +439,9 @@ pub mod tests {
         let _ = remove(&db_path, &embedded_path, &config_path);
 
         let mut dummy_db: SimpleDBNN<FastEmbeddingExample, Euclidean> = SimpleDBNN::new(
-            db_path,
-            embedded_path,
-            config_path,
+            db_path.clone(),
+            embedded_path.clone(),
+            config_path.clone(),
             FastEmbeddingExample,
             DEFAULT_DIMS,
             0,
@@ -456,10 +459,12 @@ pub mod tests {
 
         let results = dummy_db.get_nn("hello", 0, 4).unwrap();
 
+
         println!("{:?}", results);
         assert_eq!(4, results.len());
         let worse_result = results.last().unwrap();
         assert_eq!(worse_result.0, 3);
         assert!(worse_result.1 > 0.5);
+        let _ = remove(&db_path, &embedded_path, &config_path);
     }
 }
